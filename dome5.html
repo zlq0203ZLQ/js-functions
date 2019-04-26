@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>对象拷贝</title>
+</head>
+<body>
+    
+</body>
+</html>
+
+<script>
+    /*
+        对象拷贝都知道分为深拷贝和浅拷贝 简单粗暴的方法
+        JSON.parse(JSON.stringify(obj))
+
+        基本数据类型： Undefined，Null，Boolean，Number和String 保存在栈内存中
+        引用数据类型： Object 保存在堆内存中 指针指向内存地址 一个值的变化会影响指向相同内存地址的值
+
+
+
+    */
+
+    /*
+        浅拷贝
+        var arr = [1, 2, 3, '4'];
+        var arr2 = arr;
+        arr2[1] = "test"; 
+        console.log(arr); // [1, "test", 3, "4"]
+        console.log(arr2); // [1, "test", 3, "4"]
+        原值变化
+    */
+
+    /*
+        深拷贝 用slice和concat处理上代码
+        var arr = [1, 2, 3, '4'];
+        var arr2 = arr.slice(0);
+        arr2[1] = "newTest"; 
+        console.log(arr); // [1, "test", 3, "4"]
+        console.log(arr2); // [1, "newTest", 3, "4"]
+        ||
+        var arr = [1, 2, 3, '4'];
+        var arr2 = arr.concat();
+        arr2[1] = "newTest"; 
+        console.log(arr); // [1, "test", 3, "4"]
+        console.log(arr2); // [1, "newTest", 3, "4"]
+
+        深拷贝实现原理： 定义一个新的对象，遍历源对象的属性 并 赋给新对象的属性
+
+        var obj = {
+            name: 'Hanna',
+            age: 22
+        }
+        var deepCopy = function (source) {
+            var result = {};            
+            for(var key in source) {                
+                if(typeof source[key] === 'object') {
+                    result[key] = deepCopy(source[key])
+                } else {
+                    result[key] = source[key]
+                }
+            }            
+                return result;
+        }
+        var objCopy = deepCopy(obj)
+        obj.name = 'ding';
+        console.log(obj);//Object {name: "ding", age: 22}
+        console.log(objCopy);//Object {name: "Hanna", age: 22}
+
+    */
+   
+
+    function clone(value, isDeep) {
+        if (value === null) return null
+        if (typeof value != 'object') return value
+        if (Array.isArray(value)){
+            if (isDeep) {
+                return value.map(item=> clone(item,true))
+            }
+            return [].concat(value)
+        }else{
+            if(isDeep){
+                let obj = {}
+                Object.keys(value).forEach(item=>{
+                    obj[item] = clone(value[item],true)
+                })
+                return obj
+            }
+            return { ... value }
+        }
+    }
+    var objects = { c: { 'a': 1, e: [1, {f: 2}] }, d: { 'b': 2 } }
+    var shallow = clone(objects, true)
+    console.log(shallow.c.e[1]) // { f: 2 }
+    console.log(shallow.c === objects.c) // false
+    console.log(shallow.d === objects.d) // false
+    console.log(shallow === objects) // false
+</script>

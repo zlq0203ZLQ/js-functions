@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>防抖</title>
+</head>
+<body>
+    
+</body>
+</html>
+<script>
+    /*
+        防抖---不管你触发多少次，都等到你最后触发后过一段你指定的时间才触发
+    */
+    function debounce (func, wait) {
+        let timer
+        return function () {
+            let context = this
+            let args = arguments
+            clearTimeout(timer)
+            timer = setTimeout(()=>{
+                func.apply(context, args)
+            }, wait)
+        }
+    }
+
+
+</script>
